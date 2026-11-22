@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vscode
+.idea
+.qoder
+logs
+
+# 临时验证脚本
+scripts/_verify.mjs
+scripts/_dump*.mjs
+_tmp_dump.txt

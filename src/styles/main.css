@@ -1,0 +1,421 @@
+:root {
+  /* ---------- 品牌色：交大蓝单色阶（与登录页一致） ---------- */
+  --brand-900: #001d52;
+  --brand-800: #002b73; /* hover / 按下（EP dark-2） */
+  --brand: #003690; /* 主色 */
+  --brand-600: #17479f; /* 深底激活态渐变深端 */
+  --brand-500: #2a5bb5; /* 深底激活态渐变浅端、logo 渐变深端 */
+  --brand-400: #5583cf; /* logo 渐变浅端 */
+  --brand-light: #4c72b1; /* EP light-3：次级交互 */
+  --brand-soft: #e5ebf4; /* EP light-9：选中 / 浅色底 */
+  --brand-softer: #f2f6fb; /* 表头 / 更浅的底 */
+
+  /* ---------- 中性色 ---------- */
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --text-soft: #6b7280;
+  --border: #e8ecf3;
+
+  /* ---------- 侧边栏深色：品牌同色相压暗 ---------- */
+  --nav-1: #0e2450;
+  --nav-2: #081a3a;
+
+  /* ---------- 字体 / 圆角 / 阴影 ---------- */
+  --font-mono: Consolas, Menlo, monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 8px 24px rgba(16, 24, 40, 0.04);
+
+  /* ---------- Element Plus 主题对齐：全局主色与圆角 ----------
+     EP 默认蓝 #409eff 与品牌不符，这里整体注入色阶，
+     按钮 / 链接 / 分页 / 下拉选中 / 表单聚焦全部跟随交大蓝 */
+  --el-color-primary: var(--brand);
+  --el-color-primary-light-3: #4c72b1;
+  --el-color-primary-light-5: #7f9bc7;
+  --el-color-primary-light-7: #b3c3de;
+  --el-color-primary-light-8: #ccd7e9;
+  --el-color-primary-light-9: #e5ebf4;
+  --el-color-primary-dark-2: #002b73;
+  --el-border-radius-base: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* ---------- 布局 ---------- */
+.app-shell {
+  height: 100%;
+}
+
+.app-aside {
+  background: linear-gradient(180deg, var(--nav-1) 0%, var(--nav-2) 100%);
+  transition: width 0.2s;
+  overflow: hidden;
+  /* 品牌区固定、菜单区独立滚动：全部展开时底部菜单不再被裁掉 */
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 60px;
+  padding: 0 18px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex: none;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--brand-500), var(--brand-400));
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  flex: none;
+}
+
+.app-menu {
+  border-right: none !important;
+  background: transparent !important;
+  padding: 8px 8px 20px;
+  /* 占满品牌区之外的剩余高度，内容超出时纵向滚动 */
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* 滚动条走侧边栏自己的深蓝色系，不用浏览器默认灰条 */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.app-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 3px;
+}
+
+.app-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.app-menu .el-menu-item,
+.app-menu .el-sub-menu__title {
+  height: 42px;
+  line-height: 42px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  color: #c3cbdb;
+}
+
+.app-menu .el-menu-item:hover,
+.app-menu .el-sub-menu__title:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff;
+}
+
+.app-menu .el-menu-item.is-active {
+  background: linear-gradient(90deg, var(--brand-600), var(--brand-500)) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* ---------- 侧边栏子菜单（展开态） ---------- */
+.app-aside .el-menu--inline {
+  background: transparent !important;
+  padding: 2px 0 6px;
+}
+
+.app-aside .el-menu--inline .el-menu-item {
+  height: 38px;
+  line-height: 38px;
+  min-width: 0;
+  padding: 0 10px 0 44px !important;
+  font-size: 13px;
+  color: #a9b4c9;
+  background: transparent;
+  border-radius: 8px;
+}
+
+.app-aside .el-menu--inline .el-menu-item .el-icon {
+  margin-right: 8px;
+  font-size: 15px;
+}
+
+.app-aside .el-menu--inline .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff;
+}
+
+.app-aside .el-menu--inline .el-menu-item.is-active {
+  background: linear-gradient(90deg, var(--brand-600), var(--brand-500)) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* ---------- 折叠态弹出的子菜单（挂载在 body 上） ---------- */
+.el-menu--popup {
+  background: var(--nav-2) !important;
+  border: none !important;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+}
+
+.el-menu--popup .el-menu-item {
+  height: 38px;
+  line-height: 38px;
+  border-radius: 8px;
+  color: #c3cbdb;
+  font-size: 13px;
+}
+
+.el-menu--popup .el-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff;
+}
+
+.el-menu--popup .el-menu-item.is-active {
+  background: linear-gradient(90deg, var(--brand-600), var(--brand-500)) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.app-header {
+  height: 60px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.app-main {
+  padding: 18px;
+  overflow: auto;
+  background: var(--bg);
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.page-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--text-soft);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.toolbar .grow {
+  flex: 1;
+}
+
+/* ---------- 共享工具类：各页面统一从这里取，不再各自定义 ---------- */
+.grow {
+  flex: 1;
+}
+
+/* 工具条输入框 / 下拉的统一宽度（视图内可用 scoped 值覆盖个别口径） */
+.ctrl {
+  width: 200px;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.panel-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* ---------- 统计卡片 ---------- */
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  color: #fff;
+  flex: none;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.stat-label {
+  color: var(--text-soft);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ---------- 表格 ---------- */
+.el-table {
+  --el-table-border-color: var(--border);
+  --el-table-header-bg-color: var(--brand-softer);
+}
+
+/* 所有表格的标题行文本居中 */
+.el-table th.el-table__cell > .cell {
+  text-align: center;
+  justify-content: center;
+}
+
+/* 允许单元格完整显示并换行（如课程、开课班级） */
+.el-table .cell-wrap .cell {
+  white-space: normal;
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.table-pagination {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------- 登录页样式已随页面重构移入 views/LoginView.vue 的 scoped 样式 ---------- */
+
+.text-danger {
+  color: #f56c6c;
+}
+
+.text-soft {
+  color: var(--text-soft);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ---------- 移动端基础适配（≤768px：手机竖屏 / 小平板） ----------
+   只调间距与宽度口径，不改桌面端任何观感；
+   课表保留网格：列宽不够时容器横向滑动、节次列吸左（简表 CompactTimetable / 完整课表 TimetableGrid） */
+@media (max-width: 768px) {
+  .app-main {
+    padding: 10px;
+  }
+
+  .panel {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .page-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  .toolbar {
+    gap: 8px;
+  }
+
+  /* 工具条下拉 / 输入框：不再固定 200px，按行弹性伸缩 */
+  .toolbar .ctrl {
+    flex: 1 1 140px;
+    width: auto;
+    min-width: 0;
+  }
+
+  .table-pagination {
+    justify-content: center;
+  }
+
+  /* 固定宽度的弹窗（400 / 520 / 640px 等）统一收进视口；全屏弹窗不受影响 */
+  .el-dialog:not(.is-fullscreen) {
+    width: calc(100vw - 24px) !important;
+    max-width: 560px;
+    --el-dialog-margin-top: 6vh;
+  }
+
+  .el-message-box {
+    width: calc(100vw - 32px) !important;
+    max-width: 420px;
+  }
+
+  /* 确认框按钮加大点击区 */
+  .el-message-box__btns .el-button {
+    min-height: 34px;
+  }
+}
