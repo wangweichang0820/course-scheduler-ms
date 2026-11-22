@@ -45,7 +45,7 @@ export async function ensureSeeded(seedFn, version = SEED_VERSION) {
   return true
 }
 
-/** 一键清空（评委演示时可用来恢复出厂） */
+/** 一键清空（演示时可用来恢复出厂状态） */
 export async function wipeAll() {
   await Promise.all([
     db.semesters.clear(),

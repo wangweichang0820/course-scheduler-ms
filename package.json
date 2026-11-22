@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "北交大 MEM 研究生排课工作台（纯前端 · IndexedDB · Qoder Sites 参赛版）",
+  "description": "北交大 MEM 研究生排课工作台（纯前端 · IndexedDB · 零后端 · 可静态托管）",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

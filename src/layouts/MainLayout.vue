@@ -5,7 +5,7 @@
         <span class="brand-mark">MEM</span>
         <div class="brand-text">
           <div class="brand-title">北交大 · 研究生排课工作台</div>
-          <div class="brand-sub">Qoder 高校创造力大赛 · StudyHack 参赛版</div>
+          <div class="brand-sub">纯前端 · IndexedDB 本地存储 · 数据不出本机</div>
         </div>
       </div>
       <div class="header-tools" v-if="store.ready">
