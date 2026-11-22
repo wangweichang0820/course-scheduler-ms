@@ -32,8 +32,8 @@ npm run build
 npm run preview
 ```
 
-首次进入会自动播种**软著申报加工数据**（来自原 Sch_Clas_MS MySQL 库 `stuinfo_20261023_181617.sql`，
-经 `_anon/mapping.json` 完整脱敏，教师 / 工号 / 班级 / 校区 / 教学楼 / 课程号 均为映射名）：
+首次进入会自动播种**真实脱敏种子数据**（来自原 Sch_Clas_MS MySQL 库 `stuinfo_20261023_181617.sql`，
+经映射表 `_anon/mapping.json` 完整脱敏，教师 / 工号 / 班级 / 校区 / 教学楼 / 课程号 均为映射名）：
 
 - 2 学期（当前：2026-2027 秋季 · 19 周）· 4 校区 · 2 教学楼 · **9 个 MEM 班级**
 - **53 门课程 · 50 位教师 · 6 间场地 · 7 节作息 · 51 条节假日**
@@ -66,7 +66,7 @@ src/
 ├── utils/         11 个纯函数（weeks / schedule / compactGrid / exportTimetable ...）
 ├── stores/        Pinia 全局数据层（一次全量缓存 + CRUD action）
 ├── db/            Dexie (IndexedDB) schema · ensureSeeded · wipeAll
-├── seed/          real-data.json 种子（软著申报脱敏后加工数据）+ demo-data.js 播种逻辑
+├── seed/          real-data.json 种子（旧系统真实业务数据 · 已脱敏）+ demo-data.js 播种逻辑
 ├── layouts/       MainLayout（header + side + main，学期/班型筛选器）
 └── router/        6 个子路由 · hash 模式（Qoder Sites 直接托管零改写）
 ```

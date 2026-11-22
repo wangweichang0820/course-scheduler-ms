@@ -1,7 +1,7 @@
 {
   "_meta": {
     "source_sql": "d:/project/Sch_Clas_MS/backup/local_sync/stuinfo_20261023_181617.sql",
-    "source_mapping": "d:/project/Sch_Clas_MS/output/软著申请/_anon/mapping.json",
+    "source_mapping": "旧项目 _anon/mapping.json（本地脱敏映射，路径不入库）",
     "generated_at": "2026-11-22T14:40:45.468Z",
     "counts": {
       "semesters": 2,

@@ -38,7 +38,7 @@ db.version(2).stores({
 export async function ensureSeeded(seedFn, version = SEED_VERSION) {
   const flag = await db.meta.get('seeded')
   if (flag && flag.value === version) return false
-  // 版本切换：先清空旧数据（比如从手写 demo 切到申报加工数据）
+  // 版本切换：先清空旧数据（比如从手写 demo 切到真实脱敏种子数据）
   await wipeAll()
   await seedFn(db)
   await db.meta.put({ key: 'seeded', value: version, at: Date.now() })

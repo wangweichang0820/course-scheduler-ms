@@ -2,7 +2,7 @@
  * Demo 种子数据 · 北交大 MEM 2026-2027 秋季
  *
  * 数据源：`scripts/build-real-seed.mjs` 从原 Sch_Clas_MS 项目 mysqldump 抽取
- * 并按软著申报脱敏映射（`_anon/mapping.json`）替换后的 `real-data.json`：
+ * 并套用脱敏映射（`_anon/mapping.json`）替换后的 `real-data.json`：
  *   - 2 学期 / 4 校区 / 2 教学楼 / 9 班级 / 53 课程 / 50 教师 / 6 场地
  *   - 7 作息节次 / 51 节假日 / 73 教学任务 / 1 排课单 / 16 slot / 3 周组
  *   - 教师姓名 / 工号 / 班级 / 校区 / 教学楼 / 课程号 全部走映射表，不含真实信息
@@ -16,7 +16,7 @@ import { periodHours } from '@/utils/schedule'
 export const SEED_VERSION = 'real-v1'
 const CURRENT_SEMESTER = '2026-2027 秋季'
 
-// ---- 作息节次：直接来自申报数据（1-6 节各 2 课时，第 7 节 1 课时；第 3 节展示层隐藏） ----
+// ---- 作息节次：直接来自旧系统真实作息（1-6 节各 2 课时，第 7 节 1 课时；第 3 节展示层隐藏） ----
 export const TIMESLOTS = (realData.timeslots || []).map((t) => ({
   period: Number(t.period),
   label: t.label,

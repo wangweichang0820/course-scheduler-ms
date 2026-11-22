@@ -1,13 +1,17 @@
 /**
- * 一次性把「软著申报」加工数据从 MySQL dump 转成本项目 IndexedDB 播种用 JSON。
+ * 一次性把旧版 Sch_Clas_MS 的真实教务数据从 MySQL dump 转成本项目 IndexedDB 播种用 JSON。
  *
  * 输入：
  *   - d:/project/Sch_Clas_MS/backup/local_sync/stuinfo_20261023_181617.sql
- *   - d:/project/Sch_Clas_MS/output/软著申请/_anon/mapping.json （姓名/工号/班级/校区/楼名/课号 脱敏映射）
+ *   - 旧项目遗留的脱敏映射 _anon/mapping.json （姓名/工号/班级/校区/楼名/课号 脱敏映射），
+ *     路径见 MAP_PATH 常量
  *
  * 输出：src/seed/real-data.json（按 Dexie 表结构组织）
  *
- * 用法：node scripts/build-real-seed.mjs
+ * 用法（需先用环境变量指定旧项目两个输入文件的位置）：
+ *   $env:MEM_SQL_PATH = 'd:\project\Sch_Clas_MS\backup\local_sync\stuinfo_20261023_181617.sql'
+ *   $env:MEM_MAP_PATH = '<旧项目脱敏映射 _anon/mapping.json 的绝对路径>'
+ *   node scripts/build-real-seed.mjs
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
@@ -16,8 +20,14 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = resolve(__dirname, '..')
 
-const SQL_PATH = 'd:/project/Sch_Clas_MS/backup/local_sync/stuinfo_20261023_181617.sql'
-const MAP_PATH = 'd:/project/Sch_Clas_MS/output/软著申请/_anon/mapping.json'
+const SQL_PATH = process.env.MEM_SQL_PATH || 'd:/project/Sch_Clas_MS/backup/local_sync/stuinfo_20261023_181617.sql'
+// 脱敏映射文件路径由环境变量 MEM_MAP_PATH 传入（避免旧项目目录名进入仓库文本），
+// 例如：$env:MEM_MAP_PATH = 'd:\project\Sch_Clas_MS\output\<旧项目子目录>\_anon\mapping.json'
+if (!process.env.MEM_MAP_PATH) {
+  console.error('缺少环境变量 MEM_MAP_PATH：需指向旧项目的 _anon/mapping.json 脱敏映射文件')
+  process.exit(1)
+}
+const MAP_PATH = process.env.MEM_MAP_PATH
 const OUT_PATH = resolve(ROOT, 'src/seed/real-data.json')
 
 const sql = readFileSync(SQL_PATH, 'utf8')
@@ -407,7 +417,7 @@ const sheetTasks = src.schedule_sheet_tasks
 const output = {
   _meta: {
     source_sql: SQL_PATH,
-    source_mapping: MAP_PATH,
+    source_mapping: '旧项目 _anon/mapping.json（本地脱敏映射，路径不入库）',
     generated_at: new Date().toISOString(),
     counts: {
       semesters: semesters.length,

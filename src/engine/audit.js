@@ -108,7 +108,7 @@ function mkItem(type, refs, message, subject = '') {
   return { key, type, label, severity, message, subject, slots: refs.slice(0, 6), slot_count: refs.length }
 }
 
-/** 任务展示名：申报加工数据里 task_name 常为空，回退到关联 course.name。
+/** 任务展示名：种子数据里 task.task_name 常为空，回退到关联 course.name。
  *  先取 task.task_name，再取 course.name，最后兜底 "任务#<id>"。 */
 function taskLabel(task, ctx) {
   if (!task) return ''
