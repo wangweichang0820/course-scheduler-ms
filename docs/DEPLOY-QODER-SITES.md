@@ -4,28 +4,31 @@
 
 ## 前置条件
 
-- 已安装并登录 **Qoder IDE**（当前主机安装位置：`C:\Users\wwc\AppData\Local\Programs\Qoder CN\Qoder CN.exe`）
+- 已安装并登录 **Qoder 桌面端**（从 https://qoder.com 下载，与写代码用的 Qoder IDE 是两个独立应用）
 - 本地已跑过 `npm run build`，`dist/index.html + assets/` 就绪（已确认 2.9 MB / 20 个文件）
 
-## 方式一 · Qoder IDE 左侧「站点」面板（本环境适用、推荐）
+> ℹ️ **Qoder IDE（编辑器）本身没有「站点」面板**，Sites 能力位于 Qoder 桌面端与 Qoder CLI。
 
-1. 打开 Qoder CN IDE，确认右上角已登录参赛帐号（wangweichang0820）
-2. 左侧活动栏→ 点 **站点**（若无可见图标，在命令面板搜 `Sites: Open Panel`）
-3. 右上 **添加站点**，输入名称 `bjtu-mem-scheduler`（可自定义展示名）
-4. 输入框自动引用 `@sites`，将下面这段话粘贴发送：
+## 方式一 · Qoder 桌面端左侧「站点」（本次实际使用、推荐）
+
+1. 打开 **Qoder 桌面端**，确认右上角已登录参赛帐号
+2. 左侧活动栏 → 点 **站点**（编辑器类图标，悬停提示「站点」）
+3. **添加站点**，输入名称 `bjtu-mem-scheduler`（可自定义展示名）
+4. 将下面这段话粘贴到对话输入框发送：
    ```
-   已从项目 d:\project\北交大MEM排课系统＃dist 目录构建好静态产物，
+   已从项目 d:\project\北交大MEM排课系统 的 dist 目录构建好静态产物，
    请直接把它作为静态站点发布，不需要重写任何业务代码，
    访问策略设为公开免登录，便于评委直接打开。
    ```
-5. Agent 会调用 `sites:sites-building` + `sites:sites-hosting`：prepare_site → publish_site → get_publish_status 轮询 → 回传公开链接
+5. Agent 会调用内置 Sites Skills（`sites:sites-building` + `sites:sites-hosting`）：
+   prepare_site → publish_site → 轮询发布状态 → 回传公开链接
 6. 发布成功后，到站点详情里将共享策略确认为 **公开**（默认仅自己可见，需要手动改）
 
-写操作（发布 / 删除 / 改共享策略） Agent 会先复述影响并要求确认，不会静默上线。
+写操作（发布 / 删除 / 改共享策略）Agent 会先复述影响并要求确认，不会静默上线。
 
-## 方式二 · Qoder CLI 会话内自然语言（需安装 Qoder CLI）
+## 方式二 · Qoder CLI 会话内自然语言 / `/sites` 面板
 
-本主机当前 **`qodercn CLI is not installed`**（仅 IDE 自带的 `code.cmd` 启动器，`qoder sites` 子命令不可用）。若需脚本化或 CI，先从 https://qoder.com/cli 安装 Qoder CLI，然后：
+适用于脚本化或 CI 场景，需先从 https://qoder.com/cli 安装 Qoder CLI：
 
 ```
 $ cd d:\project\北交大MEM排课系统
@@ -33,7 +36,9 @@ $ qoder           # 进入交互式会话
 > 帮我把 dist 发布成站点，名字 bjtu-mem-scheduler，访问策略公开
 ```
 
-也可在会话内输入 `/sites` 面板可视化管理。
+也可在会话内输入 `/sites` 打开面板可视化管理站点、共享策略与环境变量。
+
+> 注意：本仓库开发用的 Qoder IDE 环境中 **`qodercn CLI is not installed`**（仅 IDE 自带的 `code.cmd` 启动器），`qoder sites` 子命令不可用。
 
 ## 方式三 · 终端子命令（已安装 Qoder CLI 后才可用）
 
@@ -67,9 +72,9 @@ qoder sites describe publish_site
 
 ```powershell
 npm run build
-# 在 Qoder 会话里：
-重新发布 dist 到站点 bjtu-mem-scheduler
 ```
+
+然后在 Qoder 桌面端（或 CLI）的站点会话里说：`重新发布 dist 到站点 bjtu-mem-scheduler`。
 
 Qoder Sites 会创建新的部署版本，旧版本自动保留可回滚。
 
