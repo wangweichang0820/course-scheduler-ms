@@ -14,3 +14,6 @@ scripts/_rewrite-history.mjs
 scripts/_fix-history*.mjs
 scripts/_inspect*.mjs
 _tmp_dump.txt
+
+# Qoder Sites 发布记录（siteId / deploymentId 等本机部署状态，不入库）
+*.qoder.site

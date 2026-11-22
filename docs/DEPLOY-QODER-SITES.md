@@ -2,6 +2,16 @@
 
 本项目为**纯前端 SPA**，构建产物 `dist/` 是标准静态资源目录（本次交付已预构建），可直接被 Qoder Sites 托管。路由已用 hash 模式（`createWebHashHistory`），**无需任何服务端 rewrite**。
 
+## ✅ 当前已发布站点
+
+| 项 | 值 |
+|---|---|
+| 公开访问地址 | <https://bjtu-mem-scheduler-nwdvyg6mjmb.qoder.zone/#/> |
+| 域名后缀 | `.qoder.zone`（非 `.qoder.website` / `.qoder.app`） |
+| 访问策略 | 公开免登录 |
+| 发布入口 | Qoder 桌面端左侧「站点」 |
+| 自检结果 | 2026-11-22 六项端到端自检全部通过，console 零错误零警告 |
+
 ## 前置条件
 
 - 已安装并登录 **Qoder 桌面端**（从 https://qoder.com 下载，与写代码用的 Qoder IDE 是两个独立应用）
@@ -13,7 +23,7 @@
 
 1. 打开 **Qoder 桌面端**，确认右上角已登录参赛帐号
 2. 左侧活动栏 → 点 **站点**（编辑器类图标，悬停提示「站点」）
-3. **添加站点**，输入名称 `bjtu-mem-scheduler`（可自定义展示名）
+3. **添加站点**，输入名称 `bjtu-mem-scheduler`（实际分配的子域会附加随机后缀，如 `bjtu-mem-scheduler-nwdvyg6mjmb`）
 4. 将下面这段话粘贴到对话输入框发送：
    ```
    已从项目 d:\project\北交大MEM排课系统 的 dist 目录构建好静态产物，
@@ -74,7 +84,7 @@ qoder sites describe publish_site
 npm run build
 ```
 
-然后在 Qoder 桌面端（或 CLI）的站点会话里说：`重新发布 dist 到站点 bjtu-mem-scheduler`。
+然后在 Qoder 桌面端（或 CLI）的站点会话里说：`重新发布 dist 到站点 bjtu-mem-scheduler-nwdvyg6mjmb`。
 
 Qoder Sites 会创建新的部署版本，旧版本自动保留可回滚。
 
