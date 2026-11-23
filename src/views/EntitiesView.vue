@@ -11,7 +11,8 @@
           <div class="flex-spacer"></div>
           <el-tag type="info" size="small">共 {{ filtered(cfg).length }} 条</el-tag>
         </div>
-        <el-table :data="filtered(cfg)" size="small" border stripe @selection-change="(v) => selected[cfg.entity] = v" max-height="560">
+        <!-- 表高随视口走：写死 560 时，1080 高的屏上表格提前截断、内部再滚一次，页面下方却空着一大片 -->
+        <el-table :data="filtered(cfg)" size="small" border stripe @selection-change="(v) => selected[cfg.entity] = v" :max-height="tableMax">
           <el-table-column type="selection" width="42" />
           <el-table-column type="index" label="#" width="50" />
           <el-table-column v-for="f in cfg.fields.filter((x) => !x.hidden)" :key="f.key"
@@ -61,11 +62,15 @@ import { reactive, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { useDataStore } from '@/stores/data'
+import { useTableMaxHeight } from '@/composables/useTableMaxHeight'
 
 const store = useDataStore()
 const tab = ref('classRooms')
 const keyword = reactive({})
 const selected = reactive({})
+
+// 占用高度：页头 60 + 上下内边距 36 + 页签头 40 + 工具条 56 + 卡片内边距与余量
+const tableMax = useTableMaxHeight(300)
 
 const configs = computed(() => [
   {
@@ -74,7 +79,9 @@ const configs = computed(() => [
       { key: 'code', label: '代码', width: 90, required: true },
       { key: 'name', label: '班级名称', minWidth: 200, required: true },
       { key: 'study_mode', label: '学习方式', type: 'select', options: ['全日制', '非全日制'], width: 120, required: true },
-      { key: 'class_form', label: '授课形式', type: 'select', options: ['全日制', '非全日制周末班', '非全日制集中班'], minWidth: 160, required: true },
+      /* 弹性列只留「班级名称」一个：两列都写 min-width 时，容器富余宽度会被这两列按比例摊掉，
+         各自撑到 300px 以上，表格里就全是空白 */
+      { key: 'class_form', label: '授课形式', type: 'select', options: ['全日制', '非全日制周末班', '非全日制集中班'], width: 160, required: true },
       { key: 'capacity', label: '容量', type: 'number', width: 90 }
     ]
   },
@@ -106,7 +113,8 @@ const configs = computed(() => [
     entity: 'venues', label: '教室场地',
     fields: [
       { key: 'room_no', label: '房间号', width: 110, required: true },
-      { key: 'building', label: '楼栋', width: 130 },
+      // 本 tab 其余列全是定宽；一列弹性都没有的话，表格右侧会补出一条空白列
+      { key: 'building', label: '楼栋', minWidth: 160 },
       { key: 'campus', label: '校区', width: 100 },
       { key: 'room_type', label: '类型', type: 'select', options: ['普通教室', '多媒体教室', '阶梯教室', '实验室', '机房'], width: 120 },
       { key: 'capacity', label: '容量', type: 'number', width: 80 },
@@ -197,7 +205,8 @@ async function bulkDelete(cfg) {
 </script>
 
 <style scoped>
-.entities { max-width: 1280px; }
+/* 版心居中：宽屏下限宽后若仍左对齐，剩余宽度会全部堆到右侧，看着像页面没铺满 */
+.entities { max-width: 1280px; margin-inline: auto; }
 .tab-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 .flex-spacer { flex: 1; }
 .entities-tabs :deep(.el-tabs__content) { padding: 16px; }

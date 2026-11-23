@@ -13,7 +13,8 @@
       <el-button :disabled="!selection.length" @click="bulkDelete">批量删除（{{ selection.length }}）</el-button>
     </div>
 
-    <el-table :data="rows" size="small" border stripe @selection-change="selection = $event" max-height="620">
+    <!-- 表高随视口走：写死 620 时高分屏下方会空出一大片 -->
+    <el-table :data="rows" size="small" border stripe @selection-change="selection = $event" :max-height="tableMax">
       <el-table-column type="selection" width="42" />
       <el-table-column label="课程 / 课序号" min-width="240">
         <template #default="{ row }">
@@ -134,11 +135,14 @@ import { reactive, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { useDataStore } from '@/stores/data'
+import { useTableMaxHeight } from '@/composables/useTableMaxHeight'
 import WeekPicker from '@/components/WeekPicker.vue'
 import { patternToWeeks, weeksToText } from '@/utils/weeks'
 
 const store = useDataStore()
 const kw = ref('')
+// 占用高度：页头 60 + 上下内边距 36 + 工具条 56 + 余量
+const tableMax = useTableMaxHeight(220)
 const filterForm = ref('')
 const selection = ref([])
 
@@ -249,7 +253,8 @@ async function bulkDelete() {
 </script>
 
 <style scoped>
-.tasks { max-width: 1280px; }
+/* 版心居中：宽屏下限宽后若仍左对齐，剩余宽度会全部堆到右侧，看着像页面没铺满 */
+.tasks { max-width: 1280px; margin-inline: auto; }
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .spacer { flex: 1; }
 .task-name { display: flex; align-items: center; gap: 6px; }

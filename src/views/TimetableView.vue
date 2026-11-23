@@ -215,7 +215,8 @@ watch(() => route.query, (q) => {
 </script>
 
 <style scoped>
-.tt-view { max-width: 1360px; display: flex; flex-direction: column; gap: 12px; }
+/* 版心居中：与其他页保持一致，宽屏下不留单侧空白 */
+.tt-view { max-width: 1360px; margin-inline: auto; display: flex; flex-direction: column; gap: 12px; }
 .toolbar {
   display: flex; align-items: center; gap: 10px; padding: 12px 14px;
   background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);

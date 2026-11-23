@@ -7,7 +7,7 @@
         </el-button>
         <span class="brand-mark">MEM</span>
         <div class="brand-text">
-          <div class="brand-title">北交大 · 研究生排课工作台</div>
+          <div class="brand-title">研究生排课工作台</div>
         </div>
       </div>
       <div class="header-tools" v-if="store.ready">

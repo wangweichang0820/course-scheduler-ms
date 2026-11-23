@@ -1,5 +1,5 @@
 /**
- * Demo 种子数据 · 北交大 MEM 2026-2027 秋季
+ * Demo 种子数据 · MEM 2026-2027 秋季
  *
  * 数据源：`scripts/build-real-seed.mjs` 从原 Sch_Clas_MS 项目 mysqldump 抽取
  * 并套用脱敏映射（`_anon/mapping.json`）替换后的 `real-data.json`：

@@ -67,32 +67,6 @@
         </el-card>
       </el-col>
     </el-row>
-
-    <el-card class="highlight-card">
-      <template #header>亮点功能</template>
-      <div class="highlights">
-        <div class="hl-item">
-          <div class="hl-icon">🎯</div>
-          <div><b>拖拽式网格排课</b><br />点格即排、拖拽即调，同一格多门课自动堆叠</div>
-        </div>
-        <div class="hl-item">
-          <div class="hl-icon">🧮</div>
-          <div><b>周次位图引擎</b><br />0/1 位图精确表达单双周 / 前 8 周 / 不连续周次</div>
-        </div>
-        <div class="hl-item">
-          <div class="hl-icon">⚡</div>
-          <div><b>一键自动排课</b><br />贪心算法为选中任务自动挑空闲时段与教室</div>
-        </div>
-        <div class="hl-item">
-          <div class="hl-icon">🔍</div>
-          <div><b>12 条规则学期体检</b><br />教师/教室冲突、课时超欠、合班一致性一网打尽</div>
-        </div>
-        <div class="hl-item">
-          <div class="hl-icon">📊</div>
-          <div><b>xlsx 教务格式导出</b><br />ExcelJS 前端直接生成，A4 横向打印即用</div>
-        </div>
-      </div>
-    </el-card>
   </div>
 </template>
 
@@ -149,7 +123,8 @@ function openSheet(row) {
 </script>
 
 <style scoped>
-.home { max-width: 1280px; }
+/* 版心居中：宽屏下限宽后若仍左对齐，剩余宽度会全部堆到右侧，看着像页面没铺满 */
+.home { max-width: 1280px; margin-inline: auto; }
 .hero {
   background: linear-gradient(135deg, #003690 0%, #2563eb 100%);
   color: #fff; border-radius: 12px; padding: 22px 26px;
@@ -184,8 +159,4 @@ function openSheet(row) {
 .audit-num.warning { color: #f59e0b; }
 .audit-desc { font-size: 12px; color: #8a94a6; margin-bottom: 10px; }
 .audit-types { display: flex; flex-wrap: wrap; gap: 6px; min-height: 26px; }
-.highlight-card { margin-top: 4px; }
-.highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-.hl-item { display: flex; gap: 10px; font-size: 12px; color: #4b5563; line-height: 1.6; }
-.hl-icon { font-size: 22px; }
 </style>

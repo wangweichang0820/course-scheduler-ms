@@ -33,7 +33,8 @@
 
     <el-empty v-if="!filtered.length" description="🎉 全学期未发现冲突，可以放心导出课表" />
 
-    <el-table v-else :data="filtered" size="small" border stripe row-key="key" max-height="720">
+    <!-- 表高随视口走：写死 720 在 1080 高的屏上会留出一大截空白 -->
+    <el-table v-else :data="filtered" size="small" border stripe row-key="key" :max-height="tableMax">
       <el-table-column type="expand">
         <template #default="{ row }">
           <div class="expand">
@@ -70,9 +71,12 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useDataStore } from '@/stores/data'
 import { auditSemester } from '@/engine/audit'
+import { useTableMaxHeight } from '@/composables/useTableMaxHeight'
 
 const store = useDataStore()
 const router = useRouter()
+// 占用高度：页头 60 + 上下内边距 36 + 统计卡工具条 90 + 余量
+const tableMax = useTableMaxHeight(240)
 
 const severity = ref('')
 const typeFilter = ref('')
@@ -117,7 +121,8 @@ function jump(target) {
 </script>
 
 <style scoped>
-.audit { max-width: 1280px; }
+/* 版心居中：宽屏下限宽后若仍左对齐，剩余宽度会全部堆到右侧，看着像页面没铺满 */
+.audit { max-width: 1280px; margin-inline: auto; }
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .sum-row { display: flex; gap: 10px; }
 .sum-card {

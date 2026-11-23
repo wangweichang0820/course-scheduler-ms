@@ -2,7 +2,7 @@
  * IndexedDB 数据层：基于 Dexie。
  *
  * 与原后端 SQLAlchemy 模型一一对应，去掉鉴权、审计档案、导入批次、留言、
- * 教师标注等比赛版不需要的表，保留排课主链：
+ * 教师标注等本版本用不上的表，保留排课主链：
  *   semester / classRoom / course / teacher / venue / teachingTask /
  *   scheduleSheet / scheduleSlot / holiday
  *
@@ -10,7 +10,9 @@
  */
 import Dexie from 'dexie'
 
-export const db = new Dexie('bjtu-mem-scheduler')
+// 库名即 IndexedDB 的存储标识；改名会另开一个空库，旧库数据留在浏览器里但不再被读取，
+// 应用启动时会按 SEED_VERSION 重新播种
+export const db = new Dexie('mem-scheduler')
 
 /** 种子版本号：与 demo-data.js 里的 SEED_VERSION 对应；变化时自动 wipe + 重播 */
 export const SEED_VERSION = 'real-v1'
