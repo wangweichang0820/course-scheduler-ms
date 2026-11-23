@@ -5,7 +5,6 @@
         <span class="brand-mark">MEM</span>
         <div class="brand-text">
           <div class="brand-title">北交大 · 研究生排课工作台</div>
-          <div class="brand-sub">纯前端 · IndexedDB 本地存储 · 数据不出本机</div>
         </div>
       </div>
       <div class="header-tools" v-if="store.ready">
@@ -98,7 +97,6 @@ async function onReset() {
   letter-spacing: 1px; font-size: 12px;
 }
 .brand-title { font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
-.brand-sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
 .header-tools { display: flex; align-items: center; gap: 10px; }
 .header-tools :deep(.el-input__wrapper) {
   background: rgba(255,255,255,0.14) !important;
