@@ -1,5 +1,5 @@
 <template>
-  <div class="tt-grid" :style="gridStyle">
+  <div class="tt-grid" :class="{ picking: !!pendingMove }" :style="gridStyle">
     <div class="tt-corner">节次</div>
     <div v-for="(d, di) in days" :key="d" class="tt-head" :style="{ gridColumn: di + 2 }">{{ d }}</div>
 
@@ -15,7 +15,7 @@
         class="tt-cell"
         :class="{ 'drop-hover': dropKey === cellKeyOf(di, p) }"
         :style="{ gridColumn: di + 2 }"
-        @click="emit('cell-click', week, dayOf(di), rowStart(p), rowEnd(p))"
+        @click="onCellActivate(di, p)"
         @dragover="onDragOver($event, di, p)"
         @dragleave="onDragLeave(di, p)"
         @drop="onDrop($event, di, p)"
@@ -26,10 +26,10 @@
           class="tt-card"
           :class="{ current: isCurrent(c) }"
           :style="cellStyle(c)"
-          :draggable="editable"
+          :draggable="editable && !isMobile"
           @dragstart="onDragStart(c, $event)"
           @dragend="onDragEnd"
-          @click.stop="onCardClick(week, dayOf(di), rowStart(p), rowEnd(p), c)"
+          @click.stop="onCardClick(di, p, c)"
         >
           <div v-if="isCurrent(c)" class="tt-card-badge">当前</div>
           <div class="tt-card-title">
@@ -58,19 +58,33 @@
             <span v-else class="tt-card-loc tt-card-loc-none">暂未设置上课地点</span>
           </div>
           <div v-if="c._state === 'new'" class="tt-card-flag">新增</div>
+          <!-- 触屏没有 HTML5 拖拽，改用「点卡片上的移动 → 点目标格」两步换位 -->
+          <button
+            v-if="editable && isMobile"
+            class="tt-card-move"
+            :class="{ on: pendingMove === c }"
+            @click.stop="toggleMove(c)"
+          >{{ pendingMove === c ? '取消移动' : '移动' }}</button>
         </div>
         <span v-if="!cellOf(dayOf(di), p).length" class="tt-cell-add">+</span>
       </div>
     </template>
 
     <div v-if="emptyText && !timeslots.length && !loading" class="tt-empty">{{ emptyText }}</div>
+
+    <!-- 悬浮提示条：fixed 定位，不进入 grid 流，避免打乱行号自动放置 -->
+    <div v-if="pendingMove" class="tt-move-hint">
+      <span>移动「{{ pendingMove.course_name }}」→ 点目标格子落位</span>
+      <el-button size="small" text @click="pendingMove = null">取消</el-button>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { taskColor } from '@/utils/taskColor'
 import { draggingCard } from '@/utils/cardDrag'
+import { useIsMobile } from '@/composables/useIsMobile'
 import { courseCode, hasLocation, locationRoom, periodHours, scheduleCellKey } from '@/utils/schedule'
 import { patternToWeeks } from '@/utils/weeks'
 
@@ -92,9 +106,14 @@ const props = defineProps({
 const emit = defineEmits(['cell-click', 'card-click', 'loc-click', 'card-drop'])
 
 const gridKey = computed(() => (props.week == null ? 'range' : `w${props.week}`))
-const gridStyle = computed(() => ({
-  gridTemplateColumns: `110px repeat(${Math.max(props.days.length, 1)}, minmax(0, 1fr))`
-}))
+const isMobile = useIsMobile()
+const gridStyle = computed(() => {
+  /* 窄屏下 7 列会压到 30px 完全不可读，改成保底列宽 + 让外层 .grid-area 横向滑动；
+     桌面端（如 769~900px 侧标+任务栏占掉大半宽度）同样需要保底，否则 1fr 会塌到 10px */
+  const label = isMobile.value ? '64px' : '110px'
+  const col = isMobile.value ? 'minmax(116px, 1fr)' : 'minmax(120px, 1fr)'
+  return { gridTemplateColumns: `${label} repeat(${Math.max(props.days.length, 1)}, ${col})` }
+})
 
 /** 显示列 -> 实际星期（周末班只留周六、周日时从 6 开始） */
 function dayOf(di) {
@@ -114,8 +133,35 @@ function rowHours(p) {
 
 /** 拖动中的落点高亮格子的键 */
 const dropKey = ref('')
+/** 触屏两步换位：等待落位的卡片 */
+const pendingMove = ref(null)
 /** 拖动结束后抑制一次 click，避免落点误触卡片点击 */
 let suppressClick = false
+
+/* 周次 / 星期列 / 可编辑状态变化后，待移动卡片可能已不属于当前网格，直接取消 */
+watch(() => [props.week, props.days, props.editable], () => { pendingMove.value = null })
+
+function toggleMove(card) {
+  pendingMove.value = pendingMove.value === card ? null : card
+}
+
+/** 把卡片落到指定显示行：保持连排长度，超出最大节次时前移起始节 */
+function placeAt(di, p, card) {
+  const span = Number(card.end_period ?? card.start_period) - Number(card.start_period)
+  const maxPeriod = Math.max(...props.timeslots.map((t) => rowEnd(t)), 1)
+  let start = rowStart(p)
+  if (start + span > maxPeriod) start = Math.max(1, maxPeriod - span)
+  emit('card-drop', props.week, dayOf(di), start, start + span, card)
+}
+
+function onCellActivate(di, p) {
+  if (pendingMove.value) {
+    placeAt(di, p, pendingMove.value)
+    pendingMove.value = null
+    return
+  }
+  emit('cell-click', props.week, dayOf(di), rowStart(p), rowEnd(p))
+}
 
 function cellKeyOf(di, p) {
   return `${props.week}-${dayOf(di)}-${rowStart(p)}`
@@ -138,9 +184,15 @@ function onDragEnd() {
   setTimeout(() => { suppressClick = false }, 0)
 }
 
-function onCardClick(week, day, start, end, card) {
+function onCardClick(di, p, card) {
+  // 换位进行中点到已有卡片：视作落在该格，不弹快捷编辑
+  if (pendingMove.value) {
+    if (pendingMove.value !== card) placeAt(di, p, pendingMove.value)
+    pendingMove.value = null
+    return
+  }
   if (suppressClick) return
-  emit('card-click', week, day, start, end, card)
+  emit('card-click', props.week, dayOf(di), rowStart(p), rowEnd(p), card)
 }
 
 function onDragOver(ev, di, p) {
@@ -160,12 +212,7 @@ function onDrop(ev, di, p) {
   const card = draggingCard.value
   draggingCard.value = null
   dropKey.value = ''
-  // 保持连排长度：目标行起始节 + 原长度超出最大节次时前移起始节
-  const span = Number(card.end_period ?? card.start_period) - Number(card.start_period)
-  const maxPeriod = Math.max(...props.timeslots.map((t) => rowEnd(t)), 1)
-  let start = rowStart(p)
-  if (start + span > maxPeriod) start = Math.max(1, maxPeriod - span)
-  emit('card-drop', props.week, dayOf(di), start, start + span, card)
+  placeAt(di, p, card)
 }
 
 /** 某格起始节落在该显示行范围内的卡片（连排只在起始行展示） */
@@ -248,13 +295,15 @@ function cellStyle(item) {
 .tt-cell:hover { border-color: var(--brand); background: var(--brand-soft); }
 /* 拖动落点高亮：虚线变实线，提示可放置 */
 .tt-cell.drop-hover { border-style: solid; border-color: var(--brand); background: var(--brand-soft); }
+/* 触屏换位进行中：所有格子统一提亮，跟桌面拖拽时的落点反馈保持一致 */
+.picking .tt-cell { border-color: var(--brand); background: rgba(37, 99, 235, 0.04); }
 .tt-cell-add { color: #c0c4cc; font-size: 18px; }
 
 .tt-card {
   width: 100%; border-radius: 6px; padding: 6px 8px;
   background: var(--brand-soft); /* 兜底底色，实际按课程由 cellStyle 内联 */
   border: 1px solid var(--el-color-primary-light-7); overflow: hidden;
-  display: flex; flex-direction: column; gap: 4px;
+  display: flex; flex-direction: column; gap: 4px; position: relative;
 }
 .tt-card[draggable='true'] { cursor: grab; }
 .tt-card[draggable='true']:active { cursor: grabbing; }
@@ -287,6 +336,32 @@ function cellStyle(item) {
 .tt-card-loc-empty { font-size: 12px; align-self: flex-start; text-align: left; }
 .tt-card-loc-set { cursor: pointer; text-decoration: underline dotted; }
 .tt-card-flag { font-size: 11px; color: #16a34a; font-weight: 600; }
+
+/* 窄屏专用换位按钮：贴右下，避开课程名与房号，高度保证拇指可点 */
+.tt-card-move {
+  position: absolute; right: 6px; bottom: 6px;
+  min-width: 56px; min-height: 28px; padding: 2px 8px;
+  font-size: 12px; line-height: 1; border-radius: 4px; cursor: pointer;
+  color: var(--brand); background: #fff;
+  border: 1px solid var(--el-color-primary-light-5);
+}
+.tt-card-move.on { color: #fff; background: #f59e0b; border-color: #f59e0b; font-weight: 700; }
+
+/* 卡片只在窄屏才挂换位按钮，底部让位也写在断点内，宽屏观感不变 */
+@media (max-width: 768px) {
+  .tt-card { padding-bottom: 38px; }
+}
+
+/* 换位提示条：fixed 脱离 grid 流，不会打乱行列自动放置 */
+.tt-move-hint {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  z-index: 2300; display: flex; align-items: center; gap: 6px;
+  max-width: calc(100vw - 24px);
+  padding: 8px 10px 8px 14px; border-radius: 999px;
+  background: rgba(31, 45, 61, 0.92); color: #fff; font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.tt-move-hint span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
 .tt-empty { grid-column: 1 / -1; padding: 30px 0; text-align: center; color: var(--text-soft); font-size: 13px; }
 </style>

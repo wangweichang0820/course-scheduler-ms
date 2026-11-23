@@ -7,8 +7,8 @@ dist
 .qoder
 logs
 
-# 一次性临时脚本（下划线前缀约定，不入库）
-scripts/_*.mjs
+# 一次性临时脚本与其中间产物（下划线前缀约定，不入库）
+scripts/_*
 _tmp_*.txt
 
 # Qoder Sites 发布记录（siteId / deploymentId 等本机部署状态，不入库）

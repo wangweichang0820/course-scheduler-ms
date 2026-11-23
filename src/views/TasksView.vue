@@ -2,12 +2,12 @@
   <div class="tasks">
     <div class="toolbar">
       <el-radio-group v-model="filterForm" size="default">
-        <el-radio-button label="">全部班型</el-radio-button>
-        <el-radio-button label="全日制">全日制</el-radio-button>
-        <el-radio-button label="非全日制周末班">非全周末</el-radio-button>
-        <el-radio-button label="非全日制集中班">非全集中</el-radio-button>
+        <el-radio-button value="">全部班型</el-radio-button>
+        <el-radio-button value="全日制">全日制</el-radio-button>
+        <el-radio-button value="非全日制周末班">非全周末</el-radio-button>
+        <el-radio-button value="非全日制集中班">非全集中</el-radio-button>
       </el-radio-group>
-      <el-input v-model="kw" placeholder="搜索课程 / 教师 / 班级" clearable style="width: 260px" :prefix-icon="Search" />
+      <el-input v-model="kw" placeholder="搜索课程 / 教师 / 班级" clearable class="ctrl" style="--ctrl-w: 260px" :prefix-icon="Search" />
       <div class="spacer"></div>
       <el-button type="primary" @click="openCreate"><el-icon><Plus /></el-icon> 新增任务</el-button>
       <el-button :disabled="!selection.length" @click="bulkDelete">批量删除（{{ selection.length }}）</el-button>
@@ -83,9 +83,9 @@
         </el-form-item>
         <el-form-item label="授课形式">
           <el-radio-group v-model="dialog.form.class_form">
-            <el-radio label="全日制">全日制</el-radio>
-            <el-radio label="非全日制周末班">非全周末</el-radio>
-            <el-radio label="非全日制集中班">非全集中</el-radio>
+            <el-radio value="全日制">全日制</el-radio>
+            <el-radio value="非全日制周末班">非全周末</el-radio>
+            <el-radio value="非全日制集中班">非全集中</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="主讲教师">

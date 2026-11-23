@@ -14,14 +14,14 @@
     </div>
 
     <el-row :gutter="14" class="stat-row">
-      <el-col :span="6"><div class="stat-card"><div class="stat-num">{{ store.classRooms.length }}</div><div class="stat-label">班级</div></div></el-col>
-      <el-col :span="6"><div class="stat-card"><div class="stat-num">{{ store.courses.length }}</div><div class="stat-label">课程</div></div></el-col>
-      <el-col :span="6"><div class="stat-card"><div class="stat-num">{{ store.teachers.length }}</div><div class="stat-label">教师</div></div></el-col>
-      <el-col :span="6"><div class="stat-card"><div class="stat-num">{{ store.venues.length }}</div><div class="stat-label">教室</div></div></el-col>
+      <el-col :span="6" :xs="12" :sm="6"><div class="stat-card"><div class="stat-num">{{ store.classRooms.length }}</div><div class="stat-label">班级</div></div></el-col>
+      <el-col :span="6" :xs="12" :sm="6"><div class="stat-card"><div class="stat-num">{{ store.courses.length }}</div><div class="stat-label">课程</div></div></el-col>
+      <el-col :span="6" :xs="12" :sm="6"><div class="stat-card"><div class="stat-num">{{ store.teachers.length }}</div><div class="stat-label">教师</div></div></el-col>
+      <el-col :span="6" :xs="12" :sm="6"><div class="stat-card"><div class="stat-num">{{ store.venues.length }}</div><div class="stat-label">教室</div></div></el-col>
     </el-row>
 
     <el-row :gutter="14" class="panel-row">
-      <el-col :span="12">
+      <el-col :span="12" :xs="24" :sm="12">
         <el-card>
           <template #header>
             <div class="card-header">
@@ -45,7 +45,7 @@
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="12" :xs="24" :sm="12">
         <el-card>
           <template #header>
             <div class="card-header">
@@ -159,6 +159,16 @@ function openSheet(row) {
 .hero h1 { margin: 0 0 6px; font-size: 22px; font-weight: 600; }
 .hero p { margin: 0; font-size: 13px; opacity: 0.85; }
 .hero-actions { display: flex; gap: 10px; }
+
+/* 窄屏：hero 标题与按钮换行，统计卡缩小字号避免溢出一屏 */
+@media (max-width: 768px) {
+  .hero { flex-direction: column; align-items: flex-start; gap: 12px; padding: 16px 18px; }
+  .hero h1 { font-size: 18px; }
+  .hero-actions { width: 100%; }
+  .hero-actions .el-button { flex: 1; }
+  .stat-card { padding: 12px 14px; }
+  .stat-num { font-size: 20px; }
+}
 .stat-row { margin-bottom: 16px; }
 .stat-card {
   background: #fff; border-radius: 10px; padding: 18px 20px;

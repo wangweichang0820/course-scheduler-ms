@@ -272,7 +272,8 @@ body {
 
 /* 工具条输入框 / 下拉的统一宽度（视图内可用 scoped 值覆盖个别口径） */
 .ctrl {
-  width: 200px;
+  /* 默认 200px；各页面可用 --ctrl-w 定制桌面宽度，窄屏下由下方断点收回弹性宽度 */
+  width: var(--ctrl-w, 200px);
 }
 
 .hint {
@@ -391,11 +392,14 @@ body {
     gap: 8px;
   }
 
-  /* 工具条下拉 / 输入框：不再固定 200px，按行弹性伸缩 */
-  .toolbar .ctrl {
+  /* 工具条下拉 / 输入框：不再固定宽度，按行弹性伸缩。
+     不限定父级，因为各页工具条类名不统一（toolbar / topbar / tab-toolbar）；
+     宽度靠 --ctrl-w 自定义属性传递，而不是内联 width，否则此处规则会被内联样式压死 */
+  .ctrl {
     flex: 1 1 140px;
     width: auto;
     min-width: 0;
+    max-width: 100%;
   }
 
   .table-pagination {

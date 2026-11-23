@@ -3,7 +3,7 @@
     <el-tabs v-model="tab" type="border-card" class="entities-tabs">
       <el-tab-pane v-for="cfg in configs" :key="cfg.entity" :label="cfg.label" :name="cfg.entity">
         <div class="tab-toolbar">
-          <el-input v-model="keyword[cfg.entity]" placeholder="搜索" clearable style="width: 220px" size="default" :prefix-icon="Search" />
+          <el-input v-model="keyword[cfg.entity]" placeholder="搜索" clearable class="ctrl" style="--ctrl-w: 220px" size="default" :prefix-icon="Search" />
           <el-button type="primary" size="default" @click="openCreate(cfg)">
             <el-icon><Plus /></el-icon> 新增{{ cfg.label.replace('信息', '') }}
           </el-button>
@@ -198,7 +198,7 @@ async function bulkDelete(cfg) {
 
 <style scoped>
 .entities { max-width: 1280px; }
-.tab-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.tab-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 .flex-spacer { flex: 1; }
 .entities-tabs :deep(.el-tabs__content) { padding: 16px; }
 </style>

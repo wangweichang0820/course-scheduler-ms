@@ -20,12 +20,12 @@
         </div>
       </div>
       <div class="spacer"></div>
-      <el-select v-model="severity" size="default" style="width: 130px">
+      <el-select v-model="severity" size="default" class="ctrl" style="--ctrl-w: 130px">
         <el-option label="全部级别" value="" />
         <el-option label="仅错误" value="error" />
         <el-option label="仅提醒" value="warning" />
       </el-select>
-      <el-select v-model="typeFilter" size="default" style="width: 200px" clearable placeholder="按类型筛选">
+      <el-select v-model="typeFilter" size="default" class="ctrl" style="--ctrl-w: 200px" clearable placeholder="按类型筛选">
         <el-option v-for="t in result.typeOptions" :key="t.value" :label="`${t.label}（${result.byType[t.value] || 0}）`" :value="t.value" />
       </el-select>
       <el-button @click="rerun">重跑体检</el-button>

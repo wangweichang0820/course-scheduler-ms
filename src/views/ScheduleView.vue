@@ -1,7 +1,7 @@
 <template>
   <div class="sched">
     <div class="topbar">
-      <el-select v-model="sheetId" placeholder="选择排课单" style="width: 260px" @change="onSheetChange">
+      <el-select v-model="sheetId" placeholder="选择排课单" class="ctrl" style="--ctrl-w: 260px" @change="onSheetChange">
         <el-option v-for="s in sheets" :key="s.id" :label="s.name" :value="s.id">
           <div class="sheet-opt">
             <span>{{ s.name }}</span>
@@ -10,6 +10,10 @@
         </el-option>
       </el-select>
       <el-button @click="newSheet">新建排课单</el-button>
+      <!-- 窄屏下任务列表改成侧边抽屉，这里提供入口 -->
+      <el-button v-if="isMobile" :type="activeTaskId ? 'primary' : 'default'" @click="taskPanelOpen = true">
+        任务（{{ sideTasks.length }}）
+      </el-button>
       <div class="divider"></div>
       <el-button type="warning" @click="autoSchedule" :disabled="!currentSheet || !pendingTasks.length">
         ⚡ 一键自动排课（待排 {{ pendingTasks.length }}）
@@ -24,8 +28,8 @@
     </div>
 
     <div class="body" v-if="currentSheet">
-      <!-- 左侧：任务列表 -->
-      <aside class="task-side">
+      <!-- 左侧：任务列表（窄屏下靠 .open 滑出，兼带遮罩） -->
+      <aside class="task-side" :class="{ open: taskPanelOpen }">
         <div class="side-title">可选教学任务（{{ sideTasks.length }}）</div>
         <div class="task-search">
           <el-input v-model="taskKw" placeholder="搜索任务" clearable size="small" />
@@ -48,8 +52,11 @@
             </div>
           </div>
         </div>
-        <div class="side-tip">💡 选中任务后，点击右侧网格即可排课；再次点击卡片可换到下一门任务；拖拽卡片可直接移动</div>
+        <div class="side-tip">
+          💡 选中任务后，点击右侧网格即可排课；{{ isMobile ? '点卡片上的「移动」再点目标格即可换位' : '拖拽卡片可直接移动到其他格子' }}
+        </div>
       </aside>
+      <div v-if="taskPanelOpen" class="task-scrim" @click="taskPanelOpen = false"></div>
 
       <!-- 主区：网格 -->
       <section class="grid-area">
@@ -153,9 +160,13 @@ import { buildCompactModel } from '@/utils/compactGrid'
 import { compactXlsxBuffer, downloadXlsxBuffer, exportWeeksXlsx } from '@/utils/exportTimetable'
 import JSZip from 'jszip'
 import { scheduleCellKey } from '@/utils/schedule'
+import { useIsMobile } from '@/composables/useIsMobile'
 
 const store = useDataStore()
 const route = useRoute()
+const isMobile = useIsMobile()
+/** 窄屏任务抽屉开关 */
+const taskPanelOpen = ref(false)
 
 const sheets = computed(() =>
   store.sheetsBySemester(store.currentSemester)
@@ -244,7 +255,11 @@ function tagType(f) {
   return 'info'
 }
 
-function pickTask(t) { activeTaskId.value = activeTaskId.value === t.id ? null : t.id }
+function pickTask(t) {
+  activeTaskId.value = activeTaskId.value === t.id ? null : t.id
+  // 窄屏：选完任务就收起抽屉，否则抽屉会挡住刚想点的格子
+  if (isMobile.value) taskPanelOpen.value = false
+}
 
 function loadSheetSlots() {
   const slots = store.scheduleSlots.filter((s) => Number(s.sheet_id) === Number(sheetId.value))
@@ -633,11 +648,12 @@ watch(() => store.currentClassForm, () => {
 </script>
 
 <style scoped>
-.sched { display: flex; flex-direction: column; height: calc(100vh - 96px); min-height: 500px; }
+.sched { display: flex; flex-direction: column; height: 100%; min-height: 500px; }
 .topbar {
   display: flex; align-items: center; gap: 10px; padding: 10px 14px;
   background: #fff; border-radius: 8px; margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  flex-wrap: wrap;
 }
 .divider { width: 1px; height: 22px; background: #e5e9f0; }
 .spacer { flex: 1; }
@@ -677,4 +693,25 @@ watch(() => store.currentClassForm, () => {
 .week-nav { margin-top: 12px; text-align: center; }
 .drawer-actions { margin-top: 16px; display: flex; flex-direction: column; gap: 10px; }
 .export-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+
+/* ---------- 窄屏（≤768px）：任务列表改侧边抽屉，网格拿满全宽横向滑动 ---------- */
+@media (max-width: 768px) {
+  .sched { height: auto; min-height: 0; }
+  .topbar { padding: 8px 10px; }
+  .topbar .divider { display: none; }
+  .body { grid-template-columns: 1fr; }
+  .task-side {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 2400;
+    width: 86%; max-width: 330px; border-radius: 0;
+    transform: translateX(-100%); transition: transform 0.24s ease;
+    box-shadow: 2px 0 14px rgba(0, 0, 0, 0.2);
+  }
+  .task-side.open { transform: none; }
+  .task-scrim {
+    position: fixed; inset: 0; z-index: 2390;
+    background: rgba(0, 0, 0, 0.35);
+  }
+  .grid-area { padding: 10px; min-height: 60vh; }
+  .grid-head { flex-wrap: wrap; gap: 6px; }
+}
 </style>

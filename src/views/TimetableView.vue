@@ -7,7 +7,7 @@
       </el-radio-group>
 
       <template v-if="mode === 'class'">
-        <el-select v-model="sheetId" placeholder="选择排课单" style="width: 280px" filterable>
+        <el-select v-model="sheetId" placeholder="选择排课单" class="ctrl" style="--ctrl-w: 280px" filterable>
           <el-option v-for="s in sheets" :key="s.id" :label="s.name" :value="s.id">
             <div class="opt-row">
               <span>{{ s.name }}</span>
@@ -18,10 +18,10 @@
       </template>
 
       <template v-else>
-        <el-select v-model="teacherId" placeholder="选择教师" style="width: 240px" filterable>
+        <el-select v-model="teacherId" placeholder="选择教师" class="ctrl" style="--ctrl-w: 240px" filterable>
           <el-option v-for="t in store.teachers" :key="t.id" :label="`${t.name} · ${t.title || ''}`" :value="t.id" />
         </el-select>
-        <el-select v-model="teacherClassForm" placeholder="班型（可留空）" clearable style="width: 160px">
+        <el-select v-model="teacherClassForm" placeholder="班型（可留空）" clearable class="ctrl" style="--ctrl-w: 160px">
           <el-option label="全部班型" value="" />
           <el-option label="全日制" value="全日制" />
           <el-option label="非全周末班" value="非全日制周末班" />
@@ -233,6 +233,12 @@ watch(() => route.query, (q) => {
 }
 .week-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 12px; }
 .week-card { padding: 10px; }
+
+/* 窄屏：minmax(420px,1fr) 会强制撑出横向滚动条，改成单列自适应 */
+@media (max-width: 768px) {
+  .week-list { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: 8px; }
+}
 .week-title {
   font-size: 13px; font-weight: 600; color: #003690;
   padding: 2px 4px 8px; border-bottom: 1px dashed #eef1f6; margin-bottom: 6px;
