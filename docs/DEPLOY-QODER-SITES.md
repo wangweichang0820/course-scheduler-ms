@@ -10,7 +10,7 @@
 | 域名后缀 | `.qoder.zone`（非 `.qoder.website` / `.qoder.app`） |
 | 访问策略 | 公开免登录 |
 | 发布入口 | Qoder 桌面端左侧「站点」 |
-| 自检结果 | 2026-11-23 真实浏览器自检：6 页导航正常、console 零运行时错误、IndexedDB 建库 `mem-scheduler@v20`。**但线上 bundle 仍是 `index-Cvjc4vG9.js`，favicon 进 404**（本地已修好并重新构建为 `index-hZlrFUt7.js`，等重新发布） |
+| 自检结果 | ✅ 2026-11-23 重新发布后，`scripts/verify-online.mjs` 用**全新浏览器 profile**（IndexedDB 为空，等价于评委的无痕环境）跑完参赛帖里的 5 步体验路径：**10/10 断言全部 PASS**，console 零错误、无失败资源请求。线上 bundle = `index-hZlrFUt7.js`，与本地 `dist/` 一致；favicon 已声明不再 404；375 视口四页横向零溢出。报告：`scripts/verify-online-report.json` |
 
 > ⚠️ **地址前缀变更过**：早期发布的那版链接已失效，网关返 `{"code":"sites_gateway_site_not_found"}`；上表是当前生效地址。
 > 站点名 / 地址前缀在 `More → Settings → General` 可改，**改完旧 URL 立即失效**，而本地 `.qoder.site` 状态文件里并不记录域名，
@@ -71,14 +71,23 @@ qoder sites describe publish_site
 
 ## 部署后自检清单
 
-打开返回的公开 URL，按顺序验证：
+一键跑完（需本地有 Chromium，可用 `CHROME` 环境变量指定）：
 
-- [ ] 首屏显示「研究生排课工作台」品牌头
-- [ ] 侧栏 6 个菜单能正常切换，IndexedDB 首次访问会自动播种（约 300ms）
-- [ ] 首页 hero 副行显示「9 个班级 · 71 项教学任务 · 16 条排课 · 学期共 19 周」（首次播种真实脱敏种子数据）
-- [ ] 「学期体检」页能扫一遍 16 条已有 slot，至少产出课时不匹配 / 未排任务提醒 / 老师任务量 3 类中一或多类命中
-- [ ] 「排课工作台」页 → ⚡一键自动排课 能放置至少 1 门 pending 任务
-- [ ] 「课表查看」页 → 导出 xlsx 能下载并正常在 Excel / WPS 打开
+```powershell
+node scripts/verify-online.mjs            # 默认打线上地址
+node scripts/verify-online.mjs --url=http://localhost:4173
+```
+
+脚本用全新 profile 逐项断言下面每一条，失败就非零退出；同时把 7 张过程截图写到 `docs/screenshots/online-*.png`。
+手动核对时按顺序验证：
+
+- [x] 首屏显示「研究生排课工作台」品牌头
+- [x] 侧栏 6 个菜单能正常切换，IndexedDB 首次访问会自动播种（约 300ms）
+- [x] 首页 hero 副行显示「9 个班级 · 71 项教学任务 · 16 条排课 · 学期共 19 周」（首次播种真实脱敏种子数据）
+- [x] 「学期体检」页能扫一遍 16 条已有 slot，至少产出课时不匹配 / 未排任务提醒 / 老师任务量 3 类中一或多类命中
+- [x] 「排课工作台」页 → ⚡一键自动排课 能放置至少 1 门 pending 任务（实测 10 门）
+- [x] 「课表查看」页 → 导出 xlsx 能下载并正常在 Excel / WPS 打开（实测拿到 7KB 真文件）
+- [x] 375 视口下四页无横向溢出、「基础信息」表班级名称列不被吸附的操作列遮挡（可见宽度 200px）
 
 ## 回滚 / 更新
 

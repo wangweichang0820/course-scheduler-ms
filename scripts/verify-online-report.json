@@ -1,0 +1,275 @@
+{
+  "base": "https://mem-scheduler-nwdvyg6mjmb.qoder.zone",
+  "checkedAt": "2026-11-23T10:30:06",
+  "steps": [
+    {
+      "n": "0 线上构建版本",
+      "ok": true,
+      "detail": {
+        "bundle": [
+          "index-hZlrFUt7.js"
+        ],
+        "favicon": "data:image/svg+xml,<svg "
+      }
+    },
+    {
+      "n": "1 首屏播种计数",
+      "ok": true,
+      "detail": {
+        "heroP": "9 个班级 · 71 项教学任务 · 16 条排课 · 学期共 19 周",
+        "stats": [
+          "9",
+          "53",
+          "50",
+          "6"
+        ],
+        "panels": [
+          "各排课单概况",
+          "9 张",
+          "9 张",
+          "学期体检速览",
+          "查看详情 →"
+        ]
+      }
+    },
+    {
+      "n": "2 学期体检 + 跳转到排课",
+      "ok": true,
+      "detail": {
+        "error": "3",
+        "warning": "0",
+        "scanned": "16",
+        "hit": "6",
+        "rows": 3,
+        "jumped": true,
+        "hashAfterJump": "#/schedule?sheet=24"
+      }
+    },
+    {
+      "n": "3 一键自动排课",
+      "ok": true,
+      "detail": {
+        "buttons": [
+          "新建排课单",
+          "⚡ 一键自动排课（待排 10）",
+          "放弃改动",
+          "💾 保存（0 新 / 0 改 / 0 删）",
+          "导出 xlsx"
+        ],
+        "pending": "10",
+        "autoClicked": true,
+        "saveBtnAfterAuto": "💾 保存（10 新 / 0 改 / 0 删）"
+      }
+    },
+    {
+      "n": "4 保存 / 冲突确认 / 强制保存",
+      "ok": true,
+      "detail": {
+        "conflictBox": null,
+        "dirtyTagAfter": false,
+        "saveBtnAfter": "💾 保存（0 新 / 0 改 / 0 删）"
+      }
+    },
+    {
+      "n": "4b 保存后体检扫描数变化",
+      "ok": true,
+      "detail": {
+        "before": "16",
+        "after": {
+          "error": "13",
+          "warning": "10",
+          "scanned": "26"
+        }
+      }
+    },
+    {
+      "n": "5 教师视角导出 xlsx",
+      "ok": true,
+      "detail": {
+        "activeMode": "👤 教师视角",
+        "exportDisabled": false,
+        "exportClicked": true,
+        "downloaded": {
+          "name": "618cda13-3aff-49d1-bd81-fa6ecd302267",
+          "kb": 7
+        }
+      }
+    },
+    {
+      "n": "5b 同课重复排入已占格子 → 保存冲突确认框",
+      "ok": true,
+      "detail": {
+        "pair": {
+          "name": "工程伦理",
+          "matched": true
+        },
+        "cellClicked": true,
+        "saveBtn": "💾 保存（1 新 / 0 改 / 0 删）",
+        "conflictBox": {
+          "title": "保存冲突确认",
+          "body": "检测到 2 条冲突（其中 2 条为硬冲突）： · 教师时间冲突：岑静姝 在同一时间已有课程 · 教学任务重复排课：同一教学任务在同一排课单内重复排课 是否仍要强制保存？",
+          "btns": [
+            "",
+            "返回修改",
+            "强制保存"
+          ]
+        },
+        "backToEdit": true,
+        "discarded": true
+      }
+    },
+    {
+      "n": "6 375 视口四页无溢出 + 名称列不被遮挡",
+      "ok": true,
+      "detail": {
+        "pages": {
+          "/": {
+            "hOverflow": 0,
+            "brand": "研究生排课工作台",
+            "hitSchool": false
+          },
+          "/entities": {
+            "hOverflow": 0,
+            "brand": "研究生排课工作台",
+            "hitSchool": false
+          },
+          "/schedule": {
+            "hOverflow": 0,
+            "brand": "研究生排课工作台",
+            "hitSchool": false
+          },
+          "/timetable": {
+            "hOverflow": 0,
+            "brand": "研究生排课工作台",
+            "hitSchool": false
+          }
+        },
+        "nameCol": {
+          "nameW": 200,
+          "namePos": "relative",
+          "opPos": "relative",
+          "visibleNameW": 200
+        }
+      }
+    },
+    {
+      "n": "7 console 零错误 / 无失败请求",
+      "ok": true,
+      "detail": {
+        "consoleErrors": [],
+        "failedReq": []
+      }
+    }
+  ],
+  "version": {
+    "bundle": [
+      "index-hZlrFUt7.js"
+    ],
+    "favicon": "data:image/svg+xml,<svg "
+  },
+  "step1": {
+    "heroP": "9 个班级 · 71 项教学任务 · 16 条排课 · 学期共 19 周",
+    "stats": [
+      "9",
+      "53",
+      "50",
+      "6"
+    ],
+    "panels": [
+      "各排课单概况",
+      "9 张",
+      "9 张",
+      "学期体检速览",
+      "查看详情 →"
+    ]
+  },
+  "step2": {
+    "error": "3",
+    "warning": "0",
+    "scanned": "16",
+    "hit": "6",
+    "rows": 3,
+    "jumped": true,
+    "hashAfterJump": "#/schedule?sheet=24"
+  },
+  "step3": {
+    "buttons": [
+      "新建排课单",
+      "⚡ 一键自动排课（待排 10）",
+      "放弃改动",
+      "💾 保存（0 新 / 0 改 / 0 删）",
+      "导出 xlsx"
+    ],
+    "pending": "10",
+    "autoClicked": true,
+    "saveBtnAfterAuto": "💾 保存（10 新 / 0 改 / 0 删）"
+  },
+  "step4": {
+    "conflictBox": null,
+    "dirtyTagAfter": false,
+    "saveBtnAfter": "💾 保存（0 新 / 0 改 / 0 删）"
+  },
+  "step4b": {
+    "error": "13",
+    "warning": "10",
+    "scanned": "26"
+  },
+  "step5": {
+    "activeMode": "👤 教师视角",
+    "exportDisabled": false,
+    "exportClicked": true,
+    "downloaded": {
+      "name": "618cda13-3aff-49d1-bd81-fa6ecd302267",
+      "kb": 7
+    }
+  },
+  "step5b": {
+    "pair": {
+      "name": "工程伦理",
+      "matched": true
+    },
+    "cellClicked": true,
+    "saveBtn": "💾 保存（1 新 / 0 改 / 0 删）",
+    "conflictBox": {
+      "title": "保存冲突确认",
+      "body": "检测到 2 条冲突（其中 2 条为硬冲突）： · 教师时间冲突：岑静姝 在同一时间已有课程 · 教学任务重复排课：同一教学任务在同一排课单内重复排课 是否仍要强制保存？",
+      "btns": [
+        "",
+        "返回修改",
+        "强制保存"
+      ]
+    },
+    "backToEdit": true,
+    "discarded": true
+  },
+  "mobile": {
+    "/": {
+      "hOverflow": 0,
+      "brand": "研究生排课工作台",
+      "hitSchool": false
+    },
+    "/entities": {
+      "hOverflow": 0,
+      "brand": "研究生排课工作台",
+      "hitSchool": false
+    },
+    "/schedule": {
+      "hOverflow": 0,
+      "brand": "研究生排课工作台",
+      "hitSchool": false
+    },
+    "/timetable": {
+      "hOverflow": 0,
+      "brand": "研究生排课工作台",
+      "hitSchool": false
+    },
+    "nameCol": {
+      "nameW": 200,
+      "namePos": "relative",
+      "opPos": "relative",
+      "visibleNameW": 200
+    }
+  },
+  "consoleErrors": [],
+  "failedReq": []
+}
