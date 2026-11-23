@@ -14,7 +14,8 @@
         <el-select v-model="store.currentSemester" size="small" class="sel-semester">
           <el-option v-for="s in store.semesterOptions" :key="s.value" :label="s.label" :value="s.value" />
         </el-select>
-        <el-select v-model="store.currentClassForm" size="small" class="sel-form">
+        <!-- empty-values 置空：EP 默认把 '' 归为未选中值，不覆盖就会显示「请选择」而不是「全部形式」 -->
+        <el-select v-model="store.currentClassForm" size="small" class="sel-form" :empty-values="[]">
           <el-option v-for="f in store.classFormOptions" :key="f.value" :label="f.label" :value="f.value" />
         </el-select>
         <el-button size="small" type="warning" plain @click="onReset">重置演示数据</el-button>

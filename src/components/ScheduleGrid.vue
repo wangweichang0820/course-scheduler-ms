@@ -319,7 +319,7 @@ function cellStyle(item) {
   font-size: 13px; font-weight: 600; line-height: 1.4; color: #1f2d3d;
 }
 .tt-card-code { font-size: 12px; font-weight: 500; color: var(--text-soft); white-space: nowrap; }
-/* 合班标签：交大蓝浅底小 pill，提示该课程多班级合开、时间地点同步 */
+/* 合班标签：品牌蓝浅底小 pill，提示该课程多班级合开、时间地点同步 */
 .tt-card-merged {
   font-size: 10px; line-height: 1; font-weight: 700; white-space: nowrap;
   padding: 2px 5px; border-radius: 3px; cursor: default;

@@ -23,7 +23,7 @@ import { locationRoom } from '@/utils/schedule'
 const BORDER = 'e8ecf3' // 页面网格描边
 const HEAD_BG = 'f4f6fa' // 表头 / 节次列底色
 const HEAD_TEXT = '1f2d3d'
-const BRAND = '003690' // 交大蓝：标题行底色
+const BRAND = '003690' // 品牌蓝：标题行底色
 const META_TEXT = '6b7280' // 周次 / 地点 / 班级 / 教师
 const SEC_TEXT = '64748b' // 课序号 [NN]
 const NOLOC_TEXT = 'b0b8c4' // 未设置地点

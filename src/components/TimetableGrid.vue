@@ -330,7 +330,7 @@ function mergedTip(s) {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 .tt-card-title { font-size: 11px; font-weight: 600; line-height: 1.25; }
-/* 合班小标注：交大蓝浅底 pill，提示该课程多班级合开、时间地点同步 */
+/* 合班小标注：品牌蓝浅底 pill，提示该课程多班级合开、时间地点同步 */
 .tt-merged-pill {
   display: inline-block; margin-left: 4px; padding: 0 4px; vertical-align: middle;
   font-size: 9px; line-height: 1.5; font-weight: 700; white-space: nowrap; cursor: default;

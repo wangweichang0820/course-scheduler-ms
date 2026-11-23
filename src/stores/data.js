@@ -30,8 +30,10 @@ export const useDataStore = defineStore('data', {
 
   getters: {
     semesterOptions: (s) => s.semesters.map((x) => ({ value: x.code, label: x.code })),
+    // value 用空串表示「不按班型过滤」；Element Plus 默认把空串归为未选中值，
+    // 所以页头那个 el-select 必须同时传 :empty-values="[]"，否则这里显示的是「请选择」而不是本行文案
     classFormOptions: () => [
-      { value: '', label: '全部' },
+      { value: '', label: '全部形式' },
       { value: '全日制', label: '全日制' },
       { value: '非全日制周末班', label: '非全周末班' },
       { value: '非全日制集中班', label: '非全集中班' }

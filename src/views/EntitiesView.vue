@@ -25,7 +25,8 @@
               <span v-else>{{ row[f.key] }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="130" fixed="right">
+          <!-- 窄屏下不再吸附：fixed 列以 position:sticky 贴在容器右缘，375 视口下会把名称列压到只剩 5px 可见宽度 -->
+          <el-table-column label="操作" width="130" :fixed="isMobile ? false : 'right'">
             <template #default="{ row }">
               <el-button link type="primary" size="small" @click="openEdit(cfg, row)">编辑</el-button>
               <el-popconfirm title="确定删除？" @confirm="onDelete(cfg, row)">
@@ -62,9 +63,11 @@ import { reactive, ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { useDataStore } from '@/stores/data'
+import { useIsMobile } from '@/composables/useIsMobile'
 import { useTableMaxHeight } from '@/composables/useTableMaxHeight'
 
 const store = useDataStore()
+const isMobile = useIsMobile()
 const tab = ref('classRooms')
 const keyword = reactive({})
 const selected = reactive({})
