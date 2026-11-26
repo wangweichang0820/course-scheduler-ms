@@ -13,3 +13,6 @@ _tmp_*.txt
 
 # Qoder Sites 发布记录（siteId / deploymentId 等本机部署状态，不入库）
 *.qoder.site
+
+# Playwright CLI 本机会话与截图缓存
+.playwright-cli/
