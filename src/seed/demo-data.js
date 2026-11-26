@@ -11,6 +11,7 @@
  * TimetableView、ScheduleView 直接 import 用于渲染节次行与星期列。
  */
 import realData from './real-data.json'
+import { withTeacherProfile } from './teacher-profiles'
 import { periodHours } from '@/utils/schedule'
 
 export const SEED_VERSION = 'real-v1'
@@ -42,7 +43,9 @@ export async function seedDemo(db) {
   await db.buildings.bulkAdd(data.buildings || [])
   await db.classRooms.bulkAdd(data.classRooms)
   await db.courses.bulkAdd(data.courses)
-  await db.teachers.bulkAdd(data.teachers)
+  // 教师扩展字段为演示资料，仅补齐空缺，真实脱敏种子本身保持不变
+  const teachers = data.teachers.map((teacher, index) => withTeacherProfile(teacher, index))
+  await db.teachers.bulkAdd(teachers)
   await db.venues.bulkAdd(data.venues)
   await db.timeslots.bulkAdd(data.timeslots)
 

@@ -11,6 +11,8 @@
           <div class="flex-spacer"></div>
           <el-tag type="info" size="small">共 {{ filtered(cfg).length }} 条</el-tag>
         </div>
+        <el-alert v-if="cfg.entity === 'teachers'" class="teacher-demo-tip" type="info" :closable="false" show-icon
+                  title="学院、办公室、邮箱等扩展信息为演示资料，仅用于功能展示。" />
         <!-- 表高随视口走：写死 560 时，1080 高的屏上表格提前截断、内部再滚一次，页面下方却空着一大片 -->
         <el-table :data="filtered(cfg)" size="small" border stripe @selection-change="(v) => selected[cfg.entity] = v" :max-height="tableMax">
           <el-table-column type="selection" width="42" />
@@ -106,10 +108,14 @@ const configs = computed(() => [
     fields: [
       { key: 'teacher_no', label: '工号', width: 100, required: true },
       { key: 'name', label: '姓名', width: 110, required: true },
-      { key: 'title', label: '职称', type: 'select', options: ['教授', '副教授', '讲师', '助教'], width: 110 },
+      { key: 'gender', label: '性别', type: 'select', options: ['男', '女'], width: 80 },
+      { key: 'title', label: '职称', type: 'select', options: ['教授', '副教授', '讲师', '助教', '副研究员'], width: 110 },
       { key: 'department', label: '学院', width: 140 },
-      { key: 'roles', label: '角色', width: 140 },
-      { key: 'email', label: '邮箱', minWidth: 200 }
+      { key: 'office', label: '办公室', width: 140 },
+      { key: 'roles', label: '角色', width: 150 },
+      { key: 'email', label: '邮箱', minWidth: 240 },
+      { key: 'is_mentor', label: '导师', type: 'switch', width: 80 },
+      { key: 'max_students', label: '最大带生数', type: 'number', min: 0, max: 99, width: 110 }
     ]
   },
   {
@@ -213,4 +219,5 @@ async function bulkDelete(cfg) {
 .tab-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
 .flex-spacer { flex: 1; }
 .entities-tabs :deep(.el-tabs__content) { padding: 16px; }
+.teacher-demo-tip { margin-bottom: 12px; }
 </style>

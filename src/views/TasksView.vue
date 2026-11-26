@@ -229,17 +229,25 @@ async function save() {
   const f = dialog.form
   if (!f.course_id) return ElMessage.warning('请选择课程')
   f.class_id = f.class_ids?.[0] || null
-  const task = { ...f }
-  if (dialog.mode === 'create') await store.create('teachingTasks', task)
-  else await store.update('teachingTasks', task.id, task)
-  // 状态自动回填
-  const saved = store.teachingTasks.find((x) => x.id === (task.id || Math.max(...store.teachingTasks.map((t) => t.id))))
-  if (saved) {
-    const s = refreshStatus(saved)
-    if (s && s !== saved.status) await store.update('teachingTasks', saved.id, { status: s })
+  // dialog.form 是 reactive 对象，class_ids / teacher_ids 等数组是 Proxy，
+  // IndexedDB 无法结构化克隆，必须在落盘前转成普通数据。
+  const task = JSON.parse(JSON.stringify(f))
+  try {
+    if (dialog.mode === 'create') await store.create('teachingTasks', task)
+    else await store.update('teachingTasks', task.id, task)
+    // 状态自动回填
+    const savedId = task.id || Math.max(...store.teachingTasks.map((t) => t.id))
+    const saved = store.teachingTasks.find((x) => x.id === savedId)
+    if (saved) {
+      const s = refreshStatus(saved)
+      if (s && s !== saved.status) await store.update('teachingTasks', saved.id, { status: s })
+    }
+    ElMessage.success('已保存')
+    dialog.visible = false
+  } catch (e) {
+    console.error(e)
+    ElMessage.error('保存失败：' + (e?.message || e))
   }
-  ElMessage.success('已保存')
-  dialog.visible = false
 }
 async function onDelete(row) {
   await store.remove('teachingTasks', row.id)

@@ -500,7 +500,16 @@ async function autoSchedule() {
   for (const t of list) {
     const span = Math.max(1, Number(t.sessions_per_week || 1))
     const rows = timeslotsFor.value
-    const dayOptions = gridDays.value.map((d) => DAYS.indexOf(d) + 1 + dayOffset.value)
+    // gridDays 已是真实星期名（周末班只含周六、周日），dayOffset 只用于网格渲染，
+    // 不能再叠加到实际 day_of_week，否则自动排课会写到 11/12 等非法星期而无法显示。
+    const dayOptions = gridDays.value.map((d) => DAYS.indexOf(d) + 1)
+    // 集中班网格按周分组：任务没有周次时沿用排课单周次，避免写进无周次的隐藏键。
+    const placementPattern = isConcentrated.value
+      ? (t.week_pattern || currentSheet.value.week_pattern || '1'.repeat(store.totalWeeks))
+      : t.week_pattern
+    const placementWeek = isConcentrated.value
+      ? (patternToWeeks(placementPattern)[0] || activeWeek.value || weekStart.value)
+      : null
     let ok = false
     outer: for (let di = 0; di < dayOptions.length && !ok; di++) {
       const day = dayOptions[di]
@@ -508,18 +517,18 @@ async function autoSchedule() {
         const r1 = rows[pi], r2 = rows[pi + span - 1]
         if (!r1 || !r2) continue
         const sp = r1.periodStart, ep = r2.periodEnd
-        const key = `${day}|${sp}-${ep}|${t.week_pattern}`
+        const key = `${day}|${sp}-${ep}|${placementPattern}`
         if (slotsByDayPeriod.has(key)) continue
         // 教师空闲
         const tids = [Number(t.teacher_id), Number(t.teacher2_id)].filter((x) => x)
         const teacherOk = tids.every((tid) => {
           const arr = teacherBusy.get(tid) || []
-          return !arr.some((x) => x.d === day && x.s <= ep && sp <= x.e && overlapPattern(x.w, t.week_pattern))
+          return !arr.some((x) => x.d === day && x.s <= ep && sp <= x.e && overlapPattern(x.w, placementPattern))
         })
         if (!teacherOk) continue
         // 找一个空教室
         const venue = venues.find((v) => !venueBusy.some((b) =>
-          b.vid === v.id && b.day === day && b.s <= ep && sp <= b.e && overlapPattern(b.w, t.week_pattern)
+          b.vid === v.id && b.day === day && b.s <= ep && sp <= b.e && overlapPattern(b.w, placementPattern)
         ))
         if (!venue) continue
         // 放置
@@ -531,7 +540,7 @@ async function autoSchedule() {
           day_of_week: day,
           start_period: sp,
           end_period: ep,
-          week_pattern: t.week_pattern,
+          week_pattern: placementPattern,
           venue_id: venue.id,
           room_name: venue.room_no,
           building: venue.building,
@@ -541,18 +550,18 @@ async function autoSchedule() {
           course_name: courseName(t.course_id),
           teacher_names: teacherName(t.teacher_id),
           section_no: t.section_no || '',
-          weeks_text: weeksText(t.week_pattern),
+          weeks_text: weeksText(placementPattern),
           location: venue.room_no
         }
-        const k = scheduleCellKey(isConcentrated.value ? patternToWeeks(t.week_pattern)[0] : null, day, sp)
+        const k = scheduleCellKey(placementWeek, day, sp)
         ;(draft[k] ||= []).push(card)
         slotsByDayPeriod.add(key)
         for (const tid of tids) {
           const arr = teacherBusy.get(tid) || []
-          arr.push({ d: day, s: sp, e: ep, w: t.week_pattern })
+          arr.push({ d: day, s: sp, e: ep, w: placementPattern })
           teacherBusy.set(tid, arr)
         }
-        venueBusy.push({ vid: venue.id, day, s: sp, e: ep, w: t.week_pattern })
+        venueBusy.push({ vid: venue.id, day, s: sp, e: ep, w: placementPattern })
         placed++
         ok = true
         break outer

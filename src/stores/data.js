@@ -7,6 +7,7 @@
 import { defineStore } from 'pinia'
 import { db, ensureSeeded, wipeAll, SEED_VERSION } from '@/db/indexed'
 import { seedDemo } from '@/seed/demo-data'
+import { ensureTeacherProfiles } from '@/seed/teacher-profiles'
 
 const EMPTY = () => ({
   semesters: [],
@@ -77,6 +78,7 @@ export const useDataStore = defineStore('data', {
   actions: {
     async init() {
       await ensureSeeded(seedDemo, SEED_VERSION)
+      await ensureTeacherProfiles(db)
       await this.reload()
       // 默认选中当前学期
       const cur = this.semesters.find((s) => s.is_current) || this.semesters[0]
@@ -101,6 +103,7 @@ export const useDataStore = defineStore('data', {
     async resetDemo() {
       await wipeAll()
       await seedDemo(db)
+      await ensureTeacherProfiles(db)
       await db.meta.put({ key: 'seeded', value: SEED_VERSION, at: Date.now() })
       await this.reload()
       const cur = this.semesters.find((s) => s.is_current) || this.semesters[0]
